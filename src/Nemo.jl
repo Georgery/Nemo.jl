@@ -50,6 +50,7 @@ fields depending on the model version.
 """
 function valid_request(r, m::Model1)
     try
+        print(haskey(r, "bearOdds"))
         haskey(r, "bearOdds") &&
         haskey(r, "stake") &&
         r["bearOdds"] isa Number &&
@@ -58,7 +59,6 @@ function valid_request(r, m::Model1)
         false
     end
 end
-
 
 
 """
@@ -73,7 +73,7 @@ What amount should be bet on what.
     be rounded to, to make "don't-bet"s possible.
 """
 function bet_this(request, m::Model1, round_digits = 6)
-    valid_request(request, m) && return Dict("on" => "bull", "bet" => "0.0")
+    valid_request(request, m) || return Dict("on" => "bull", "bet" => "0.0")
     _bob_ = "bull"
     amount = 0
     for (i, bear_odds) ∈ enumerate(m.bear_odds)
