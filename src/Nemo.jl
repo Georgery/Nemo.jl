@@ -10,8 +10,6 @@ export  bob, bet_this,
 using Intervals
 
 
-
-
 #=========================================================================
 Helper Functions
 =========================================================================#
@@ -41,17 +39,16 @@ struct Model1
     share::Vector{Float64}
 end
 
-function bet_this(request, model::Model1)
+function bet_this(request, model::Model1, round_digits = 6)
     _bob_ = "bull"
     amount = 0
     for (i, bear_odds) ∈ enumerate(model.bear_odds)
         if request["bear_odds"] ∈ bear_odds 
             _bob_ = bob(model.share[i])
-            amount = request["stake"] * abs(model.share[i])
-            break
+            amount = round(request["stake"] * abs(model.share[i]), digits = round_digits)
+            return Dict("on" => _bob_, "bet" => string(amount))
         end
     end
-    return Dict("on" => _bob_, "bet" => string(amount))
 end
 
 
