@@ -73,14 +73,14 @@ What amount should be bet on what.
     be rounded to, to make "don't-bet"s possible.
 """
 function bet_this(request, m::Model1, round_digits = 6)
-    valid_request(request, m) || return Dict("on" => "bull", "bet" => "0.0")
+    valid_request(request, m) || return Dict("on" => "bull", "bet" => 0.0)
     _bob_ = "bull"
     amount = 0
     for (i, bear_odds) ∈ enumerate(m.bear_odds)
         if request["bearOdds"] ∈ bear_odds 
             _bob_ = bob(m.share[i])
             amount = round(request["stake"] * abs(m.share[i]), digits = round_digits)
-            return Dict("on" => _bob_, "bet" => string(amount))
+            return Dict("on" => _bob_, "bet" => amount)
         end
     end
 end
